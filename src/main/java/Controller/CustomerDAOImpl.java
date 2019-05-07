@@ -43,8 +43,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 int amount = resultSet.getInt("Amount");
                 java.util.Date expDate = FORMAT.parse(resultSet.getString("ExpDate"));
                // java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-                Product product = new Product(id, name, typeID, price, alcoholContent,
-                        volume, amount, sqlExpDate);
+                Product product = new Product(id, name, typeID, price, amount,);
 
                 allProducts.add(product);
             }

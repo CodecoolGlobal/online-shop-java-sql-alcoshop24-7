@@ -8,23 +8,23 @@ public class Product {
     private String name;
     private int typeId;
     private float price;
-    private float alcoholContent;
-    private float volume;
     private int amount;
-    private Date expirationDate;
+    private boolean isAvailable;
+    int rate;
 
     
-    public Product(int id, String name, int typeId, float price, float alcoholContent,
-        float volume, int amount, Date expirationDate){
+    public Product(int id, String name, int typeId, float price,
+        int amount, String available, int rate){
         
         this.id = id;
         this.name = name;
         this.typeId = typeId;
         this.price = price;
-        this. alcoholContent = alcoholContent;
-        this.volume = volume;
         this.amount = amount;
-        this.expirationDate = expirationDate;
+        this.rate = rate;
+        isAvailable = Boolean.valueOf(available);
+
+
     }
 
     public int getId(){
@@ -55,22 +55,6 @@ public class Product {
         this.price = price;
     }
 
-    public float getAlcoholContent(){
-        return alcoholContent;
-    }
-
-    public void setAlcoholContent(float alcoholContent){
-        this.alcoholContent = alcoholContent;
-    }
-
-    public float getVolume(){
-        return volume;
-    }
-
-    public void setVolume(float volume){
-        this.volume = volume;
-    }
-
     public int getAmount(){
         return amount; 
     }
@@ -79,13 +63,7 @@ public class Product {
         this.amount = amount;
     }
 
-    public Date getExpirationDate(){
-        return expirationDate;
-    }
 
-    public void setExpirationDate(Date date){
-        this.expirationDate = date;
-    }
 
     public String toString(){
 
