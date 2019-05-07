@@ -16,7 +16,7 @@ public class ControllerDaoImpl implements ControllerDao {
         int userType = 0;
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop.db");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
             Statement stmt = connection.createStatement();
             connection.setAutoCommit(false);
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM Users;");

@@ -68,14 +68,17 @@ public class Controller{
             String name = adminView.getStringAnswer("Enter name of product");
             int typeId = adminView.getIntAnswer("Enter type id (number between 1 and 6): ");
             float price = adminView.getFloatAnswer("Enter price separated by dot: ");
-            float alcoholContent = adminView.getFloatAnswer("Enter vol% of product: ");
-            float volume = adminView.getFloatAnswer("Enter quantity pf the product(for example 0.5 L): ");
+            //float alcoholContent = adminView.getFloatAnswer("Enter vol% of product: ");
+            //float volume = adminView.getFloatAnswer("Enter quantity pf the product(for example 0.5 L): ");
             int amount = adminView.getIntAnswer("Enter amount of the product in stock");
-            int year = adminView.getIntAnswer("Enter year (exp date yyyy): ");
-            int month = adminView.getIntAnswer("Enter month (exp date mm): ");;
-            int day = adminView.getIntAnswer("Enter day (exp date dd): ");;
-            Date expirationDate = new Date(year, month, day);
-            Product product = new Product(0, name, typeId, price, alcoholContent, volume, amount, expirationDate);
+           // int year = adminView.getIntAnswer("Enter year (exp date yyyy): ");
+            //int month = adminView.getIntAnswer("Enter month (exp date mm): ");;
+            //int day = adminView.getIntAnswer("Enter day (exp date dd): ");;
+            //Date expirationDate = new Date(year, month, day);
+            String available = "true";
+            int rate = adminView.getIntAnswer("What is the rate");
+
+            Product product = new Product(0, name, typeId, price, amount, available, rate );
             admin.CreateProduct(product);
 
         }else if(answer == 5){

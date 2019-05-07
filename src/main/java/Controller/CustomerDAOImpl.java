@@ -27,7 +27,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         allProducts = new ArrayList<>();
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop.db");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
             Statement stmt = connection.createStatement();
             connection.setAutoCommit(false);
 
@@ -41,9 +41,12 @@ public class CustomerDAOImpl implements CustomerDAO {
                 //float alcoholContent = resultSet.getFloat("Vol.(%)");
                 //float volume = resultSet.getFloat("Vol(l)");
                 int amount = resultSet.getInt("Amount");
-                java.util.Date expDate = FORMAT.parse(resultSet.getString("ExpDate"));
+                //java.util.Date expDate = FORMAT.parse(resultSet.getString("ExpDate"));
                // java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-                Product product = new Product(id, name, typeID, price, amount,);
+                int rate = resultSet.getInt("Rate");
+                String available = resultSet.getString("Available");
+                Product product = new Product(id, name, typeID, price, amount, available, rate);
+
 
                 allProducts.add(product);
             }
@@ -51,7 +54,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             stmt.close();
             connection.commit();
             connection.close();
-        } catch (ParseException | ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             System.err.println(ex.getMessage());
         }
         return allProducts;
@@ -66,7 +69,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         Connection connection = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:alcoshop.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
         } catch (ClassNotFoundException | SQLException ex) {
             System.err.println(ex.getMessage());
         }
@@ -144,13 +147,11 @@ public class CustomerDAOImpl implements CustomerDAO {
             String name = resultSet2.getString("Name");
             int typeID = resultSet2.getInt("TypeID");
             float price = resultSet2.getFloat("Price");
-            float alcoholContent = resultSet2.getFloat("Vol.(%)");
-            float volume = resultSet2.getFloat("Vol(l)");
             int amount = resultSet2.getInt("Amount");
-            java.util.Date expDate = FORMAT.parse(resultSet2.getString("ExpDate"));
-            java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-            product = new Product(id, name, typeID, price, alcoholContent,
-                    volume, amount, sqlExpDate);
+            int rate = resultSet2.getInt("Rate");
+            String available = resultSet2.getString("Available");
+            product = new Product(id, name, typeID, price,
+                     amount, available, rate );
 
             resultSet2.close();
             statement.close();

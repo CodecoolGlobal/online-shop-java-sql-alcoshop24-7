@@ -12,8 +12,8 @@ public class AdminView {
     public void printAllProducts(List<Product> products){
         for (Product product: products
              ) {
-            System.out.println("ID: " + product.getId() +", " + "name: " + product.getName()+", "  + "vol(%): " + product.getAlcoholContent() +", "  + "Amount: " +
-                    product.getAmount()+", "  + "vol(l)" + product.getVolume()+", "  + "price: " + product.getPrice());
+            System.out.println("ID: " + product.getId() +", " + "name: " + product.getName()+", "  + "vol(%): " +", "  + "Amount: " +
+                    product.getAmount()+", "  + ", "  + "price: " + product.getPrice());
         }
     }
 
