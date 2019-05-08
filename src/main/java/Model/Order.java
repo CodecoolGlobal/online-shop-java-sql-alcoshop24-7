@@ -1,6 +1,8 @@
 package Model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+
 
 
 public class Order{
@@ -9,17 +11,21 @@ public class Order{
     private int customerID;
     private int basketID;
     private String status;
-    private Date creationDate;
+    private LocalDateTime creationDate;
+    private Basket basket;
 
 
 
 
-    public Order(int ID, int customerID, int basketID, String status, Date creationDate) {
+
+    public Order(int ID, int customerID, int basketID, String status, LocalDateTime creationDate, Basket basket) {
         this.ID = ID;
         this.customerID = customerID;
         this.basketID = basketID;
         this.status = status;
         this.creationDate = creationDate;
+        this.basket = basket;
+
 
     }
     public int getBasketID() {
@@ -27,7 +33,7 @@ public class Order{
     }
 
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
@@ -44,21 +50,13 @@ public class Order{
     }
 
     public String toString(){
-        String string = new String("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data" + getCreationDate()  );
+        String string = new String("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data: " + getCreationDate()  );
 
 
         return string;
     }
 
 
-
-    private enum Status{
-        ORDERED,
-        PAYED,
-        COMPLETED;
-
-
-    }
 
 
 }

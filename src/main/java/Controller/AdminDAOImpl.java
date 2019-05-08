@@ -5,6 +5,8 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,7 @@ public class AdminDAOImpl implements AdminDAO {
     private List<Product> allProducts;
     private List<User> allCustomers;
     private List<Order> allOrders;
-    private final DateFormat FORMAT = new SimpleDateFormat("yyyy-mm-dd");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
     @Override
@@ -184,9 +186,9 @@ public class AdminDAOImpl implements AdminDAO {
                 int basketID = resultSet.getInt("BasketID");
                 int userID = resultSet.getInt("CustomerID");
                 String status = resultSet.getString("Status");
-                java.util.Date expDate = FORMAT.parse(resultSet.getString("CreationDate"));
-                java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-                Order order = new Order(orderID, userID, basketID, status, sqlExpDate);
+                LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
+                Order order = new Order(orderID, userID, basketID, status, creationDate);
                 allOrders.add(order);
 
             }
@@ -195,7 +197,7 @@ public class AdminDAOImpl implements AdminDAO {
             connection.commit();
             connection.close();
 
-        }catch (ClassNotFoundException | ParseException ex){
+        }catch (ClassNotFoundException  ex){
             System.err.println(ex.getMessage());
         }
         return allOrders;

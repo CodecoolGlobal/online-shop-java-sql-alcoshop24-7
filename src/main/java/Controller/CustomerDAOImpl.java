@@ -1,9 +1,9 @@
 package Controller;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import Controller.CustomerDAO;
 import Model.Product;
@@ -15,11 +15,13 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
 public class CustomerDAOImpl implements CustomerDAO {
-    private final DateFormat FORMAT = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private List<Product> allProducts;
     private List<Order> myOrders;
 
@@ -92,14 +94,15 @@ public class CustomerDAOImpl implements CustomerDAO {
                 int basketID = resultSet.getInt("BasketID");
                 int userID = resultSet.getInt("CustomerID");
                 String status = resultSet.getString("Status");
-                java.util.Date expDate = FORMAT.parse(resultSet.getString("CreationDate"));
-                java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-                myOrders.add(new Order(orderID, userID, basketID, status ,sqlExpDate));}
+                LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
+                Basket basket = getBasket(orderID);
+                myOrders.add(new Order(orderID, userID, basketID, status ,creationDate, basket));}
 
             con.commit();
             con.close();
 
-        } catch (SQLException | ParseException ex) {
+        } catch (SQLException  ex) {
             System.err.println(ex.getMessage());
         }
 
@@ -122,14 +125,15 @@ public class CustomerDAOImpl implements CustomerDAO {
             int basketID = resSet.getInt("BasketID");
             int userID = resSet.getInt("CustomerID");
             String status = resSet.getString("Status");
-            java.util.Date expDate = FORMAT.parse(resSet.getString("CreationDate"));
-            java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-            order = new Order(orderID, userID, basketID, status, sqlExpDate);
+            LocalDateTime creationDate = LocalDateTime.parse(resSet.getString("CreationDate"), formatter);
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
+            Basket basket = getBasket(orderID);
+            order = new Order(orderID, userID, basketID, status, creationDate, basket);
 
             conn.commit();
             conn.close();
 
-        } catch (SQLException | ParseException ex ) {
+        } catch (SQLException  ex ) {
             System.err.println(ex.getMessage());
         }
         return order;
@@ -183,8 +187,51 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
-//    public boolean isAvailable() throws SQLException{
-//        boolean answer = null;
-//        return answer;
-//    }
+    @Override
+    public void createNewOrder(int customerID, Basket basket) {
+
+    }
+
+    private Basket getBasket(Map<Integer, Integer> productIDAmount){
+        Map<Product, Integer> products = new HashMap<>();
+        for (Map.Entry<Integer, Integer> entry : productIDAmount.entrySet()) {
+            Product product = getProductById(entry.getKey());
+            products.put(product, entry.getValue());
+
+        }
+        return null;
+    }
+
+    private Map getProductsIDByBasketID(int basketID){
+
+        Map<Integer, Integer> products = new HashMap();
+        Connection connection = setConnection();
+        ResultSet resultSet2 = null;
+
+        try {
+            connection.setAutoCommit(false);
+            PreparedStatement statement = connection.prepareStatement("SELECT name FROM Basket-Products WHERE BasketID=?");
+            statement.setInt(1, basketID);
+
+            resultSet2 = statement.executeQuery();
+
+            int productsID = resultSet2.getInt("ProductID");
+            int amount = resultSet2.getInt("Ammount");
+            products.put(productsID, amount);
+
+
+
+
+
+            resultSet2.close();
+            statement.close();
+            connection.close();
+
+        } catch (Exception exception) {
+            System.err.println(exception);
+
+        }
+        return products;
+
+    }
 }
