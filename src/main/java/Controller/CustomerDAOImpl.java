@@ -245,7 +245,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     private void updateRate(int idproduct, float newRate, int newNumOfOp) {
         Connection updateCon = setConnection();
         try {
-            updateCon.setAutoCommit(false);
+            updateCon.setAutoCommit(true);
 
             //String updateQuery = "UPDATE Products SET Rate = ?, NumOfOp = ? WHERE ID = ?";
             PreparedStatement updateStatement = updateCon.prepareStatement
