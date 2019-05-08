@@ -2,56 +2,52 @@ package Model;
 
 import java.util.Date;
 
+
 public class Order{
 
     private int ID;
+    private int customerID;
     private int basketID;
-    private int userID;
+    private String status;
     private Date creationDate;
-    private Date paymentDate;
-    private Status status;
 
-    public Order(int ID, int basketID, int userID) {
+
+
+
+    public Order(int ID, int customerID, int basketID, String status, Date creationDate) {
         this.ID = ID;
+        this.customerID = customerID;
         this.basketID = basketID;
-        this.userID = userID;
+        this.status = status;
+        this.creationDate = creationDate;
+
     }
     public int getBasketID() {
         return basketID;
     }
 
-    public int getUserID() {
-        return userID;
-    }
 
     public Date getCreationDate() {
         return creationDate;
-    }
-
-    public Date getPaymentDate() {
-        return paymentDate;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     public int getID() {
         return ID;
     }
 
-    public boolean isPayed(){
-        if (status == Status.PAYED){
-            return true;
-        }
-        return false;
+    public int getCustomerID() {
+        return customerID;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
     public String toString(){
-        String result = String.format("Order ID: %d, Creation date: %h",
-                getID(), getCreationDate());
-        return result;
+        String string = new String("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data" + getCreationDate()  );
+
+
+        return string;
     }
 
 

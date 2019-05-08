@@ -42,7 +42,7 @@ public class AdminDAOImpl implements AdminDAO {
                 String available = resultSet.getString("Available");
                 Product product = new Product(id, name, typeID, price,
                  amount, available, rate);
-                
+
                 allProducts.add(product);
             }
             resultSet.close();
@@ -180,10 +180,13 @@ public class AdminDAOImpl implements AdminDAO {
             connection.setAutoCommit(false);
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM Orders;");
             while (resultSet.next()){
-                int id = resultSet.getInt("ID");
-                int customerId = resultSet.getInt("CustomerID");
+                int orderID = resultSet.getInt("ID");
                 int basketID = resultSet.getInt("BasketID");
-                Order order = new Order(id, basketID, customerId);
+                int userID = resultSet.getInt("CustomerID");
+                String status = resultSet.getString("Status");
+                java.util.Date expDate = FORMAT.parse(resultSet.getString("CreationDate"));
+                java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
+                Order order = new Order(orderID, userID, basketID, status, sqlExpDate);
                 allOrders.add(order);
 
             }
@@ -192,7 +195,7 @@ public class AdminDAOImpl implements AdminDAO {
             connection.commit();
             connection.close();
 
-        }catch (ClassNotFoundException ex){
+        }catch (ClassNotFoundException | ParseException ex){
             System.err.println(ex.getMessage());
         }
         return allOrders;

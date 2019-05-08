@@ -2,6 +2,7 @@ package Controller;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import Controller.CustomerDAO;
@@ -18,7 +19,7 @@ import java.util.List;
 
 
 public class CustomerDAOImpl implements CustomerDAO {
-    private final DateFormat FORMAT = new SimpleDateFormat("yyyy-mm-dd");
+    private final DateFormat FORMAT = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
     private List<Product> allProducts;
     private List<Order> myOrders;
 
@@ -38,11 +39,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 String name = resultSet.getString("Name");
                 int typeID = resultSet.getInt("TypeID");
                 float price = resultSet.getFloat("Price");
-                //float alcoholContent = resultSet.getFloat("Vol.(%)");
-                //float volume = resultSet.getFloat("Vol(l)");
                 int amount = resultSet.getInt("Amount");
-                //java.util.Date expDate = FORMAT.parse(resultSet.getString("ExpDate"));
-               // java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
                 int rate = resultSet.getInt("Rate");
                 String available = resultSet.getString("Available");
                 Product product = new Product(id, name, typeID, price, amount, available, rate);
@@ -94,12 +91,15 @@ public class CustomerDAOImpl implements CustomerDAO {
                 int orderID = resultSet.getInt("ID");
                 int basketID = resultSet.getInt("BasketID");
                 int userID = resultSet.getInt("CustomerID");
-                myOrders.add(new Order(orderID, basketID, userID));}
+                String status = resultSet.getString("Status");
+                java.util.Date expDate = FORMAT.parse(resultSet.getString("CreationDate"));
+                java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
+                myOrders.add(new Order(orderID, userID, basketID, status ,sqlExpDate));}
 
             con.commit();
             con.close();
 
-        } catch (SQLException ex) {
+        } catch (SQLException | ParseException ex) {
             System.err.println(ex.getMessage());
         }
 
@@ -121,12 +121,15 @@ public class CustomerDAOImpl implements CustomerDAO {
             int orderID = resSet.getInt("ID");
             int basketID = resSet.getInt("BasketID");
             int userID = resSet.getInt("CustomerID");
-            order = new Order(orderID, basketID, userID);
+            String status = resSet.getString("Status");
+            java.util.Date expDate = FORMAT.parse(resSet.getString("CreationDate"));
+            java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
+            order = new Order(orderID, userID, basketID, status, sqlExpDate);
 
             conn.commit();
             conn.close();
 
-        } catch (SQLException ex) {
+        } catch (SQLException | ParseException ex ) {
             System.err.println(ex.getMessage());
         }
         return order;
