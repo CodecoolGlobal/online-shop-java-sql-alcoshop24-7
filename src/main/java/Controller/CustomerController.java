@@ -33,6 +33,10 @@ public class CustomerController{
 
     }
 
+    public void rateProduct(int ID, int customerRate){
+        dao.rateProduct(ID, customerRate);
+    }
+
 
 
 }

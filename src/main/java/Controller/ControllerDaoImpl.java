@@ -12,7 +12,6 @@ public class ControllerDaoImpl implements ControllerDao {
 
     @Override
     public int getUserType(String login, String password) throws SQLException {
-        //List allUsers = new ArrayList<>();
         allUsers = new ArrayList();
         int userType = 0;
         try {
@@ -32,10 +31,7 @@ public class ControllerDaoImpl implements ControllerDao {
                 }
 
                 allUsers.add(user);
-
-
             }
-
 
             resultSet.close();
             stmt.close();
