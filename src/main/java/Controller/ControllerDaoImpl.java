@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerDaoImpl implements ControllerDao {
-
+    private List<User> allUsers;
 
     @Override
     public int getUserType(String login, String password) throws SQLException {
-        List allUsers = new ArrayList<>();
+        //List allUsers = new ArrayList<>();
+        allUsers = new ArrayList();
         int userType = 0;
         try {
             Class.forName("org.sqlite.JDBC");
@@ -30,8 +31,6 @@ public class ControllerDaoImpl implements ControllerDao {
                     userType = userTypeId;
                 }
 
-
-
                 allUsers.add(user);
 
 
@@ -46,5 +45,13 @@ public class ControllerDaoImpl implements ControllerDao {
             System.err.println(ex.getMessage());
         }
         return userType;
+    }
+
+    public List getAllUsers(){
+        return allUsers;
+    }
+
+    public User get(int i){
+        return allUsers.get(i);
     }
 }
