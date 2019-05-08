@@ -49,7 +49,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
                 allProducts.add(product);
             }
-            resultSet.close();
+
             stmt.close();
             connection.commit();
             connection.close();
@@ -59,9 +59,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         return allProducts;
     }
 
-    public Basket getBasket(int orderID) {
-        return null;
-    }
+
 
 
     private Connection setConnection() {
@@ -96,7 +94,10 @@ public class CustomerDAOImpl implements CustomerDAO {
                 String status = resultSet.getString("Status");
                 LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
-                Basket basket = getBasket(orderID);
+                Map idSet = getProductsIDByBasketID(basketID);
+
+                Map products = getBasket(idSet);
+                Basket basket = new Basket(basketID, products);
                 myOrders.add(new Order(orderID, userID, basketID, status ,creationDate, basket));}
 
             con.commit();
@@ -127,7 +128,9 @@ public class CustomerDAOImpl implements CustomerDAO {
             String status = resSet.getString("Status");
             LocalDateTime creationDate = LocalDateTime.parse(resSet.getString("CreationDate"), formatter);
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
-            Basket basket = getBasket(orderID);
+            Map idSet = getProductsIDByBasketID(basketID);
+            Map products = getBasket(idSet);
+            Basket basket = new Basket(basketID, products);
             order = new Order(orderID, userID, basketID, status, creationDate, basket);
 
             conn.commit();
@@ -146,7 +149,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         try {
             connection.setAutoCommit(false);
-            PreparedStatement statement = connection.prepareStatement("SELECT name FROM Products WHERE id=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Products WHERE id=?");
             statement.setInt(1, productID);
             resultSet2 = statement.executeQuery();
 
@@ -160,7 +163,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             product = new Product(id, name, typeID, price,
                      amount, available, rate );
 
-            resultSet2.close();
+
             statement.close();
             connection.close();
 
@@ -192,14 +195,15 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     }
 
-    private Basket getBasket(Map<Integer, Integer> productIDAmount){
+    private Map<Product, Integer> getBasket(Map<Integer, Integer> productIDAmount){
         Map<Product, Integer> products = new HashMap<>();
         for (Map.Entry<Integer, Integer> entry : productIDAmount.entrySet()) {
             Product product = getProductById(entry.getKey());
             products.put(product, entry.getValue());
 
         }
-        return null;
+
+        return products;
     }
 
     private Map getProductsIDByBasketID(int basketID){
@@ -210,7 +214,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         try {
             connection.setAutoCommit(false);
-            PreparedStatement statement = connection.prepareStatement("SELECT name FROM Basket-Products WHERE BasketID=?");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM `Basket_Products` WHERE BasketID=?");
             statement.setInt(1, basketID);
 
             resultSet2 = statement.executeQuery();
@@ -219,11 +223,6 @@ public class CustomerDAOImpl implements CustomerDAO {
             int amount = resultSet2.getInt("Ammount");
             products.put(productsID, amount);
 
-
-
-
-
-            resultSet2.close();
             statement.close();
             connection.close();
 

@@ -7,8 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import Model.*;
 
@@ -188,7 +187,9 @@ public class AdminDAOImpl implements AdminDAO {
                 String status = resultSet.getString("Status");
                 LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
-                Order order = new Order(orderID, userID, basketID, status, creationDate);
+                Map idSet = new HashMap<Integer, Integer>();
+                Basket basket = new Basket(basketID, idSet);
+                Order order = new Order(orderID, userID, basketID, status, creationDate, basket);
                 allOrders.add(order);
 
             }
@@ -228,4 +229,7 @@ public class AdminDAOImpl implements AdminDAO {
         }
 
     }
+
+
+
 }

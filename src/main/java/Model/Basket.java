@@ -7,7 +7,7 @@ public class Basket{
     private Iterator<Product> iterator;
     private Map<Product, Integer> products;
 
-    Basket(int ID, Map<Product, Integer> products){
+    public Basket(int ID, Map<Product, Integer> products){
         this.ID = ID;
         this.products = products;
     }
