@@ -200,6 +200,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         for (Map.Entry<Integer, Integer> entry : productIDAmount.entrySet()) {
             Product product = getProductById(entry.getKey());
             products.put(product, entry.getValue());
+            System.out.println("amount: " + entry.getValue());
 
         }
 
