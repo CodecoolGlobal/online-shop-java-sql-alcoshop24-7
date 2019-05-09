@@ -18,6 +18,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.lang.Integer;
 
 
 public class CustomerDAOImpl implements CustomerDAO {
@@ -183,7 +184,6 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(exception);
         }
     }
-
 //    TODO
     @Override
     public void addNewOrder(Order order) {
@@ -301,7 +301,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(ex.getMessage());
         }
     }
-    private void updateBasketProductTable(Basket basket){}
+
 
     private int getOrderSize(){
         int orderSize = 0;
@@ -327,5 +327,67 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(ex.getMessage());
         }
         return orderSize;
+    }
+
+
+    private void updateBasketProductTable(Basket basket){
+        Map <Product, Integer> basketContent = basket.getProducts();
+        Connection connection = setConnection();
+        PreparedStatement stmt = null;
+        try {
+            connection.setAutoCommit(false);
+
+            for (Map.Entry<Product, Integer> entry : basketContent.entrySet()) {
+
+                String sqlStatments = "INSERT into Basket_Products"
+                        + "(ID, BasketID, ProductID, Ammount)"
+                        + " values (?, ? ,? ,? )";
+
+                stmt = connection.prepareStatement(sqlStatments);
+
+                stmt.setInt(1, basket.getID());//this should be order Id but it's same as basketId
+                stmt.setInt(2, basket.getID());
+                stmt.setInt(3, entry.getKey().getId());
+                stmt.setInt(4, entry.getValue());
+
+                stmt.executeUpdate();
+
+            }
+
+            stmt.close();
+            connection.commit();
+            connection.close();
+
+
+        }catch (SQLException ex){
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    private boolean checkIsEnoughProductInStock(int productId, int requiredAmmount){
+        Connection connection = setConnection();
+        ResultSet checkingResult = null;
+        int ammountOfProduct =0;
+        try{
+            connection.setAutoCommit(false);
+            PreparedStatement checkingStatement = connection.prepareStatement(
+              "SELECT Amount FROM Products WHERE ID =?"
+            );
+            checkingStatement.setInt(1, productId);
+            checkingResult = checkingStatement.executeQuery();
+            ammountOfProduct = checkingResult.getInt("Amount");
+
+            checkingStatement.close();
+            connection.commit();
+            connection.close();
+
+
+        }catch (SQLException exc){
+            exc.printStackTrace();
+        }
+        if (ammountOfProduct >= requiredAmmount){
+            return true;
+        }
+        return false;
     }
 }

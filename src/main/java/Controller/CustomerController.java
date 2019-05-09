@@ -11,6 +11,10 @@ public class CustomerController{
     CustomerDAOImpl dao = new CustomerDAOImpl();
     CustomerView view = new CustomerView();
 
+    //michals function
+//    public void deactiveProduct(){
+//        dao.deactivateProduct();
+//    }
 
     public List<Product> getAllProducts() throws SQLException{
         return dao.getAllProducts();

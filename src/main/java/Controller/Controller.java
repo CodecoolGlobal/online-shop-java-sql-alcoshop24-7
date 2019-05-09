@@ -114,9 +114,12 @@ public class Controller{
             List<Product> listTosearch = customerController.getAllProducts();
             customerView.printProductByID(listTosearch, chosenID);
         }
-        else if (answer == 4){
+        else if (answer == 4) {
             customerConsoleHandler = false;
         }
+//        else if (answer ==6){
+//            customerController.deactiveProduct();
+//        }
 
 
     }
