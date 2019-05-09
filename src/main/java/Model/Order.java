@@ -49,6 +49,10 @@ public class Order{
         return status;
     }
 
+    public Basket getBasket() {
+        return basket;
+    }
+
     public String toString(){
         String string = new String("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data: " + getCreationDate()  );
 

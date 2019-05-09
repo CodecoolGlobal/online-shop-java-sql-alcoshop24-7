@@ -185,9 +185,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 //    TODO
     @Override
     public void addNewOrder(Order order) {
-        updateOrderTable(null);
-        updateBasketProductTable(null);
-        updateBasketTable(null);
+        updateOrderTable(order);
+        updateBasketProductTable(order.getBasket());
+        updateBasketTable(order.getBasket());
     }
 
     private Map<Product, Integer> getBasket(Map<Integer, Integer> productIDAmount){
