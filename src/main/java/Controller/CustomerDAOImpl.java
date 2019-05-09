@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.lang.Integer;
 
 
 public class CustomerDAOImpl implements CustomerDAO {
@@ -268,7 +269,40 @@ public class CustomerDAOImpl implements CustomerDAO {
 //    TODO
     private void updateOrderTable(Order order){}
     private void updateBasketTable(Basket basket){}
-    private void updateBasketProductTable(Basket basket){}
+
+    private void updateBasketProductTable(Basket basket){
+        Map <Product, Integer> basketContent = basket.getProducts();
+        Connection connection = setConnection();
+        PreparedStatement stmt = null;
+        try {
+            connection.setAutoCommit(false);
+
+            for (Map.Entry<Product, Integer> entry : basketContent.entrySet()) {
+
+                String sqlStatments = "INSERT into Basket_Products"
+                        + "(ID, BasketID, ProductID, Ammount)"
+                        + " values (?, ? ,? ,? )";
+
+                stmt = connection.prepareStatement(sqlStatments);
+
+                stmt.setInt(1, basket.getID());//this should be order Id but it's same as basketId
+                stmt.setInt(2, basket.getID());
+                stmt.setInt(3, entry.getKey().getId());
+                stmt.setInt(4, entry.getValue());
+
+                stmt.executeUpdate();
+
+            }
+
+            stmt.close();
+            connection.commit();
+            connection.close();
+
+
+        }catch (SQLException ex){
+            System.err.println(ex.getMessage());
+        }
+    }
 
     private boolean checkIsEnoughProductInStock(int productId, int requiredAmmount){
         Connection connection = setConnection();
