@@ -1,18 +1,15 @@
 package Model;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Basket{
     private int ID;
     private Iterator<Product> iterator;
-    private List<Product> products;
+    private Map<Product, Integer> products;
 
-    Basket(int ID){
+    public Basket(int ID, Map<Product, Integer> products){
         this.ID = ID;
-        products = new ArrayList<Product>();
-//        iterator = new Iterator<Product>();
+        this.products = products;
     }
 
     public Iterator<Product> getIterator(){
@@ -23,13 +20,15 @@ public class Basket{
         return ID;
     }
 
-    public List<Product> getProducts(){
+    public Map getProducts(){
         return products;
     }
 
     public void addProduct(Product product, int ammount){
-
+        products.put(product, ammount);
     }
+
+
 
     public String toString(){
         return "";

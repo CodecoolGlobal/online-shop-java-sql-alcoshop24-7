@@ -13,7 +13,10 @@ public interface CustomerDAO{
     Product getProductById(int productId) throws SQLException;
     List<Order> getOrders(int customerId) throws SQLException;
     Order getOrder(int orderId) throws SQLException;
-    Basket getBasket(int orderId) throws SQLException;
-    //public boolean isAvailable() throws SQLException;
+
+
+
+    void addNewOrder(Order order);
+
 
 }

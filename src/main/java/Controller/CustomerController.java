@@ -11,10 +11,16 @@ public class CustomerController{
     CustomerDAOImpl dao = new CustomerDAOImpl();
     CustomerView view = new CustomerView();
 
+    //michals function
+//    public void deactiveProduct(){
+//        dao.deactivateProduct();
+//    }
 
     public List<Product> getAllProducts() throws SQLException{
         return dao.getAllProducts();
     }
+
+
 
     public List<Order> getOrders(int customerID)throws SQLException{
         return dao.getOrders(customerID);
@@ -28,15 +34,13 @@ public class CustomerController{
         return dao.getProductById(productID);
     }
 
-    public void makeNewOrder(int ID, int basketID, int userID)throws SQLException{
-        dao.makeNewOrder(ID, basketID, userID);
-
+    public void addOrder(Order order){
+        dao.addNewOrder(order);
     }
 
     public void rateProduct(int ID, int customerRate){
         dao.rateProduct(ID, customerRate);
     }
-
 
 
 }

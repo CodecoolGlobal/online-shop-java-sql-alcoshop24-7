@@ -5,8 +5,9 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import Model.*;
 
@@ -14,7 +15,7 @@ public class AdminDAOImpl implements AdminDAO {
     private List<Product> allProducts;
     private List<User> allCustomers;
     private List<Order> allOrders;
-    private final DateFormat FORMAT = new SimpleDateFormat("yyyy-mm-dd");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 
     @Override
@@ -42,7 +43,7 @@ public class AdminDAOImpl implements AdminDAO {
                 String available = resultSet.getString("Available");
                 Product product = new Product(id, name, typeID, price,
                  amount, available, rate);
-                
+
                 allProducts.add(product);
             }
             resultSet.close();
@@ -180,10 +181,15 @@ public class AdminDAOImpl implements AdminDAO {
             connection.setAutoCommit(false);
             ResultSet resultSet = stmt.executeQuery("SELECT * FROM Orders;");
             while (resultSet.next()){
-                int id = resultSet.getInt("ID");
-                int customerId = resultSet.getInt("CustomerID");
+                int orderID = resultSet.getInt("ID");
                 int basketID = resultSet.getInt("BasketID");
-                Order order = new Order(id, basketID, customerId);
+                int userID = resultSet.getInt("CustomerID");
+                String status = resultSet.getString("Status");
+                LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
+                Map idSet = new HashMap<Integer, Integer>();
+                Basket basket = new Basket(basketID, idSet);
+                Order order = new Order(orderID, userID, basketID, status, creationDate, basket);
                 allOrders.add(order);
 
             }
@@ -192,7 +198,7 @@ public class AdminDAOImpl implements AdminDAO {
             connection.commit();
             connection.close();
 
-        }catch (ClassNotFoundException ex){
+        }catch (ClassNotFoundException  ex){
             System.err.println(ex.getMessage());
         }
         return allOrders;
@@ -223,4 +229,7 @@ public class AdminDAOImpl implements AdminDAO {
         }
 
     }
+
+
+
 }

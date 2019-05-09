@@ -38,6 +38,7 @@ public class CustomerView{
         System.out.println("3. See chosen product");
         System.out.println("4. Exit program");
         System.out.println("5. Rate product");
+        System.out.println("6. Buy products");
     }
 
     public String getStringAnswer(String message){

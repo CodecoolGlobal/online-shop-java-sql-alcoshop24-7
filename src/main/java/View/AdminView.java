@@ -27,7 +27,7 @@ public class AdminView {
     public void printAllOrders(List<Order> orders){
         for (Order order: orders
              ) {
-            System.out.println("ID: " + order.getID() + ", BasketID: " + order.getBasketID()+ ", CustomerID: " + order.getUserID());
+            System.out.println("ID: " + order.getID() + ", UserID: " + order.getCustomerID() + ", BasketID: " + order.getBasketID() + ", status: " + order.getStatus() + ", creation data" + order.getCreationDate()  );
         }
     }
 

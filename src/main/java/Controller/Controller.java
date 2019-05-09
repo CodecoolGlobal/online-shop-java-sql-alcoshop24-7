@@ -2,11 +2,10 @@ package Controller;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.*;
-import Model.Customer;
-import Model.User;
-import Model.Order;
-import Model.Product;
+
+import Model.*;
 import View.AdminView;
 import View.CustomerView;
 import java.sql.Date;
@@ -112,13 +111,27 @@ public class Controller{
             List<Product> listTosearch = customerController.getAllProducts();
             customerView.printProductByID(listTosearch, chosenID);
         }
-        else if (answer == 4){
+        else if (answer == 4) {
             customerConsoleHandler = false;
         }
+
         else if (answer == 5){
             int chosenProductID = customerView.getIntAnswer("Which product you want to rate? Choose ID");
             int customersRate = customerView.getIntAnswer("Your rate is: (form 1 to 5)");
             customerController.rateProduct(chosenProductID, customersRate);
+        }
+
+
+        else if (answer ==6){
+            customerController.getAllProducts();
+            int chosenProductID = customerView.getIntAnswer("Choose ID product to buy");
+            int ammount = customerView.getIntAnswer("How much you want?");
+            Map<Product, Integer> mapForBasket = new HashMap<>();
+            mapForBasket.put(customerController.getProductById(chosenProductID), ammount);
+            Basket yourBasket = new Basket(chosenProductID, mapForBasket);
+            Order ourOrder = new Order(0, currentCustomer.getId(), 0, "pending",
+                    LocalDateTime.now(), yourBasket);
+            customerController.addOrder(ourOrder);
         }
 
 

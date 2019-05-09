@@ -1,68 +1,66 @@
 package Model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
+
+
 
 public class Order{
 
     private int ID;
+    private int customerID;
     private int basketID;
-    private int userID;
-    private Date creationDate;
-    private Date paymentDate;
-    private Status status;
+    private String status;
+    private LocalDateTime creationDate;
+    private Basket basket;
 
-    public Order(int ID, int basketID, int userID) {
+
+
+
+
+    public Order(int ID, int customerID, int basketID, String status, LocalDateTime creationDate, Basket basket) {
         this.ID = ID;
+        this.customerID = customerID;
         this.basketID = basketID;
-        this.userID = userID;
+        this.status = status;
+        this.creationDate = creationDate;
+        this.basket = basket;
+
+
     }
     public int getBasketID() {
         return basketID;
     }
 
-    public int getUserID() {
-        return userID;
-    }
 
-    public Date getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
-    }
-
-    public Date getPaymentDate() {
-        return paymentDate;
-    }
-
-    public Status getStatus() {
-        return status;
     }
 
     public int getID() {
         return ID;
     }
 
-    public boolean isPayed(){
-        if (status == Status.PAYED){
-            return true;
-        }
-        return false;
+    public int getCustomerID() {
+        return customerID;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public Basket getBasket() {
+        return basket;
+    }
 
     public String toString(){
-        String result = String.format("Order ID: %d, Creation date: %h",
-                getID(), getCreationDate());
-        return result;
+        String string = new String("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data: " + getCreationDate()  );
+
+
+        return string;
     }
 
 
-
-    private enum Status{
-        ORDERED,
-        PAYED,
-        COMPLETED;
-
-
-    }
 
 
 }
