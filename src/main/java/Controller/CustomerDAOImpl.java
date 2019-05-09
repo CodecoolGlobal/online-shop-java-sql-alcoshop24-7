@@ -377,6 +377,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             checkingResult = checkingStatement.executeQuery();
             ammountOfProduct = checkingResult.getInt("Amount");
 
+
             checkingStatement.close();
             connection.commit();
             connection.close();
