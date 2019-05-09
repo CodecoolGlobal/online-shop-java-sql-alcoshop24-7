@@ -242,7 +242,69 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
 //    TODO
-    private void updateOrderTable(Order order){}
+    private void updateOrderTable(Order order){
+        try {Class.forName("org.sqlite.JDBC");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
+            PreparedStatement stmt;
+            connection.setAutoCommit(false);
+            String sqlStatments = "insert into Products"
+                    + "(ID, CustomerID, BasketID, Status, CreationDate)"
+                    + " values (?, ? ,? ,? ,? )";
+
+            stmt = connection.prepareStatement(sqlStatments);
+
+
+
+            stmt.setInt(1, getOrderSize());
+            stmt.setInt(2, order.getCustomerID());
+            stmt.setInt(3, order.getBasketID());
+            stmt.setString(4, order.getStatus());
+            stmt.setDate(5, null);
+
+
+            stmt.executeUpdate();
+
+
+
+
+            stmt.close();
+            connection.commit();
+            connection.close();
+
+
+        }catch (ClassNotFoundException | SQLException ex){
+            System.err.println(ex.getMessage());
+        }
+    }
     private void updateBasketTable(Basket basket){}
     private void updateBasketProductTable(Basket basket){}
+
+
+
+
+    private int getOrderSize(){
+        int orderSize = 0;
+        Connection con = setConnection();
+        PreparedStatement stmt = null;
+        ResultSet resultSet = null;
+
+        try {
+            con.setAutoCommit(false);
+            stmt = con.prepareStatement("SELECT * FROM Orders");
+
+
+            resultSet = stmt.executeQuery();
+
+            while(resultSet.next()) {
+                orderSize ++;
+            }
+
+            con.commit();
+            con.close();
+
+        } catch (SQLException  ex) {
+            System.err.println(ex.getMessage());
+        }
+        return orderSize;
+    }
 }
