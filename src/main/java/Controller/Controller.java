@@ -119,6 +119,7 @@ public class Controller{
             Basket yourBasket = new Basket(chosenProductID, mapForBasket);
             Order ourOrder = new Order(0, currentCustomer.getId(), 0, "pending",
                     LocalDateTime.now(), yourBasket);
+            customerController.addOrder(ourOrder);
         }
 
     }

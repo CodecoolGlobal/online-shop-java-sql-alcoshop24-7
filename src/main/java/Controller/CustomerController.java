@@ -34,11 +34,9 @@ public class CustomerController{
         return dao.getProductById(productID);
     }
 
-    public void makeNewOrder(int ID, int basketID, int userID)throws SQLException{
-        dao.makeNewOrder(ID, basketID, userID);
-
+    public void addOrder(Order order){
+        dao.addNewOrder(order);
     }
-
 
 
 }

@@ -85,13 +85,13 @@ public class CustomerDAOImpl implements CustomerDAO {
                 int basketID = resultSet.getInt("BasketID");
                 int userID = resultSet.getInt("CustomerID");
                 String status = resultSet.getString("Status");
-                LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
+//                LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
+//                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
                 Map idSet = getProductsIDByBasketID(basketID);
 
                 Map products = getBasket(idSet);
                 Basket basket = new Basket(basketID, products);
-                myOrders.add(new Order(orderID, userID, basketID, status ,creationDate, basket));}
+                myOrders.add(new Order(orderID, userID, basketID, status ,null, basket));}
 
             con.commit();
             con.close();
@@ -254,14 +254,14 @@ public class CustomerDAOImpl implements CustomerDAO {
 
             stmt = connection.prepareStatement(sqlStatments);
 
-            LocalDate date = order.getCreationDate().toLocalDate();
-            java.sql.Date sqlDate = java.sql.Date.valueOf(date);
+//            LocalDate date = order.getCreationDate().toLocalDate();
+//            java.sql.Date sqlDate = java.sql.Date.valueOf(date);
 
             stmt.setInt(1, getOrderSize()+1);
             stmt.setInt(2, order.getCustomerID());
             stmt.setInt(3, getOrderSize()+1);
             stmt.setString(4, order.getStatus());
-            stmt.setDate(5, sqlDate);
+            stmt.setDate(5, null);
 
             stmt.executeUpdate();
 
@@ -345,7 +345,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
                 stmt = connection.prepareStatement(sqlStatments);
 
-                stmt.setInt(1, basket.getID());//this should be order Id but it's same as basketId
+                stmt.setInt(1, getBasketProductrSize()+1);//this should be order Id but it's same as basketId
                 stmt.setInt(2, basket.getID());
                 stmt.setInt(3, entry.getKey().getId());
                 stmt.setInt(4, entry.getValue());
@@ -391,4 +391,31 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return false;
     }
+
+    private int getBasketProductrSize(){
+        int orderSize = 0;
+        Connection con = setConnection();
+        PreparedStatement stmt = null;
+        ResultSet resultSet = null;
+
+        try {
+            con.setAutoCommit(false);
+            stmt = con.prepareStatement("SELECT * FROM `Basket_Products`");
+
+
+            resultSet = stmt.executeQuery();
+
+            while(resultSet.next()) {
+                orderSize ++;
+            }
+
+            con.commit();
+            con.close();
+
+        } catch (SQLException  ex) {
+            System.err.println(ex.getMessage());
+        }
+        return orderSize;
+    }
+
 }
