@@ -190,6 +190,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         updateOrderTable(order);
         updateBasketProductTable(order.getBasket());
         updateBasketTable(order.getBasket());
+
     }
 
     private Map<Product, Integer> getBasket(Map<Integer, Integer> productIDAmount){
