@@ -1,6 +1,6 @@
 package Controller;
 
-import java.text.ParseException;
+import java.text.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +12,6 @@ import sun.misc.Resource;
 
 import java.sql.*;
 import java.text.ParseException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -43,7 +41,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 int amount = resultSet.getInt("Amount");
                 //java.util.Date expDate = FORMAT.parse(resultSet.getString("ExpDate"));
                // java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
-                int rate = resultSet.getInt("Rate");
+                float rate = resultSet.getFloat("Rate");
                 String available = resultSet.getString("Available");
                 Product product = new Product(id, name, typeID, price, amount, available, rate);
 
@@ -158,8 +156,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             connection.close();
 
         } catch (Exception exception) {
-            System.err.println(exception);
-
+            exception.printStackTrace();
         }
         return product;
 
@@ -180,8 +177,86 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
     }
 
-//    public boolean isAvailable() throws SQLException{
-//        boolean answer = null;
-//        return answer;
-//    }
+
+    public void rateProduct(int id, int customerRate){
+
+        float currentRate = getCurrentRate(id);
+        int numOfOpinions = getNumOfOp(id);
+        float newRate = calculateNewRate(currentRate, numOfOpinions, customerRate);
+        int newNumOfOp = numOfOpinions+1;
+        updateRate(id, newRate, newNumOfOp);
+    }
+
+    private float getCurrentRate(int id) {
+        Connection rateCon = setConnection();
+        ResultSet rateResult = null;
+        float currentRate = 0;
+        try {
+            rateCon.setAutoCommit(false);
+            PreparedStatement idStat = rateCon.prepareStatement("SELECT Rate FROM Products WHERE id=?");
+            idStat.setInt(1, id);
+            rateResult = idStat.executeQuery();
+
+            currentRate = rateResult.getFloat("Rate");
+
+            rateResult.close();
+            idStat.close();
+            rateCon.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return currentRate;
+    }
+
+    private int getNumOfOp(int id){
+        Connection rateCon = setConnection();
+        ResultSet rateResult = null;
+        int numOfOpp = 0;
+        try {
+            rateCon.setAutoCommit(false);
+            PreparedStatement idStat = rateCon.prepareStatement("SELECT NumOfOp FROM Products WHERE id=?");
+            idStat.setInt(1, id);
+            rateResult = idStat.executeQuery();
+
+            numOfOpp = rateResult.getInt("NumOfOp");
+
+            rateResult.close();
+            idStat.close();
+            rateCon.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return numOfOpp;
+    }
+
+    private void updateRate(int idproduct, float newRate, int newNumOfOp) {
+        Connection updateCon = setConnection();
+        try {
+            updateCon.setAutoCommit(true);
+
+            PreparedStatement updateStatement = updateCon.prepareStatement
+                    ("UPDATE Products SET Rate = ?, NumOfOp = ? WHERE ID = ?");
+            updateStatement.setFloat(1, newRate);
+            updateStatement.setInt(2, newNumOfOp);
+            updateStatement.setInt(3, idproduct);
+
+            updateStatement.executeUpdate();
+
+            updateStatement.close();
+            updateCon.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+
+    private float calculateNewRate(float oldRate, int numOfOpinions, int customerRate){
+        float firstStep = oldRate * numOfOpinions;
+        float secondStep = firstStep + customerRate;
+        float result = secondStep / (numOfOpinions +1);
+        return result;
+    }
 }
