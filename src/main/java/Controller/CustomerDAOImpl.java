@@ -8,7 +8,6 @@ import Controller.CustomerDAO;
 import Model.Product;
 import Model.Basket;
 import Model.Order;
-import sun.misc.Resource;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -27,7 +26,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         allProducts = new ArrayList<>();
         try {
             Class.forName("org.sqlite.JDBC");
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop.db");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
             Statement stmt = connection.createStatement();
             connection.setAutoCommit(false);
 

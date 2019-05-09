@@ -11,12 +11,30 @@ import Model.Order;
 
 public interface AdminDAO {
 
-    List<Product> getAllProducts() throws SQLException;
-    List<User> getAllCustomers() throws  SQLException;
-    void refillTheStock(Product product, int amount) throws SQLException;
-    void addCategory(Category category) throws  SQLException;
-    void createNewProduct(Product product) throws  SQLException;
-    List<Order> getOrders() throws  SQLException;
-    void deactivateProduct(Product product) throws  SQLException;
-    void deactivateProductIf0() throws  SQLException;
+    void printAllProducts() throws SQLException;
+
+    List<Product> getListOfProducts() throws SQLException;
+
+    void addNewCategory(String categoryName);
+
+    void updateCategoryName(int ID, String newName);
+
+    void deactivateProduct(int ID);
+
+    void activateProduct(int ID);
+
+    void deleteProduct(int ID);
+
+    void addNewProduct(String name, int categoryID, float price, int quantity, String available);
+
+    void editProduct(int id, String newName, float price, int quantity);
+
+    void makeDiscount(int id, float discountPercent);
+
+    List<Order> getAllOrders() throws SQLException;
+
+    void printAllOrders() throws SQLException;
+
+    void printAllCategories() throws SQLException;
+
 }

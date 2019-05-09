@@ -8,34 +8,119 @@ import Model.Order;
 import View.AdminView;
 
 public class AdminController{
-    private AdminDAOImpl adminDAO = new AdminDAOImpl();
+    public AdminDAOImpl adminDAO = new AdminDAOImpl();
+    public AdminView adminView = new AdminView();
 
+    public void updateCategoryName() throws SQLException{
+        adminView.clearScreen();
+        printAllCategories();
+        adminView.println("Choose ID of category to update: ");
+        int categoryID = adminView.getIntegerInput();
+        adminView.clearScreen();
+        adminView.println("Enter new category name: ");
+        String newName = adminView.getStringInput();
+        adminDAO.updateCategoryName(categoryID, newName);
+        printAllCategories();
+    }
+
+    public void addNewCategory() throws  SQLException{
+        adminView.clearScreen();
+        adminView.println("New category name: ");
+        String newCategoryName = adminView.getStringInput();
+        adminDAO.addNewCategory(newCategoryName);
+        printAllCategories();
+    }
+
+    public void addNewProduct() throws SQLException {
+        adminView.clearScreen();
+        printAllProducts();
+        adminView.println("Enter product's name: ");
+        String name = adminView.getStringInput();
+        adminView.println("Enter category ID: ");
+        int categoryID = adminView.getIntegerInput();
+        adminView.println("Enter price: ");
+        float price = adminView.getFloatInput();
+        adminView.println("Enter new quantity: ");
+        int quantity = adminView.getIntegerInput();
+        adminView.println("Is the product available from beginning? (true/false)");
+        String isAvailable = adminView.getStringInput();
+        adminDAO.addNewProduct(name, categoryID, price, quantity, isAvailable);
+        printAllProducts();
+    }
+
+    public void deleteProduct() throws SQLException{
+        adminView.clearScreen();
+        printAllProducts();
+        adminView.println("Enter ID of product which you want to delete: ");
+        int productID = adminView.getIntegerInput();
+        adminDAO.deleteProduct(productID);
+        printAllProducts();
+    }
+
+    public void editProduct() throws SQLException {
+        adminView.clearScreen();
+        printAllProducts();
+        adminView.println("Enter ID of product which you want to edit: ");
+        int productID = adminView.getIntegerInput();
+        adminView.println("New name: ");
+        String newName = adminView.getStringInput();
+        adminView.println("Enter new price: ");
+        float price = adminView.getFloatInput();
+        adminView.println("Enter new quantity: ");
+        int quantity = adminView.getIntegerInput();
+        adminDAO.editProduct(productID, newName, price, quantity);
+        printAllProducts();
+    }
+
+    public void makeDiscount() throws SQLException {
+        adminView.clearScreen();
+        printAllProducts();
+        adminView.println("Enter ID of product to lower it's price: ");
+        int productID = adminView.getIntegerInput();
+        adminView.println("Enter percent number (1-100) of the price reduction: ");
+        float discountPercent = adminView.getFloatInput();
+        adminDAO.makeDiscount(productID, discountPercent);
+        printAllProducts();
+    }
+
+    public void deactivateProduct() throws SQLException {
+        adminView.clearScreen();
+        printAllProducts();
+        adminView.println("Enter ID of product which you want to deactivate:");
+        int productID = adminView.getIntegerInput();
+        adminDAO.deactivateProduct(productID);
+        printAllProducts();
+    }
+
+    public void activateProduct() throws SQLException {
+        adminView.clearScreen();
+        printAllProducts();
+        adminView.println("Enter ID of product which you want to activate: ");
+        int productID = adminView.getIntegerInput();
+        adminDAO.activateProduct(productID);
+        printAllProducts();
+    }
 
     public List<Product> getAllProducts() throws SQLException{
-        return adminDAO.getAllProducts();
+        return adminDAO.getListOfProducts();
     }
 
-    public List<User> getAllCustomers() throws  SQLException{
-        return  adminDAO.getAllCustomers();
+    public void printAllProducts() throws SQLException{
+        adminView.clearScreen();
+        adminDAO.printAllProducts();
     }
 
-    public void refillTheStock(Product product, int amount) throws  SQLException{
-        adminDAO.refillTheStock(product, amount);
+    public List<Order> getAllOrders() throws SQLException{
+        return adminDAO.getAllOrders();
     }
 
-    public void CreateProduct(Product product) throws SQLException {
-        adminDAO.createNewProduct(product);
+    public void printAllOrders() throws SQLException{
+        adminView.clearScreen();
+        adminDAO.printAllOrders();
     }
 
-    public List<Order> getAllOrders() throws  SQLException{
-        return adminDAO.getOrders();
+    public void printAllCategories() throws  SQLException{
+        adminView.clearScreen();
+        adminDAO.printAllCategories();
     }
-
-    public int askAdminForActivity(){
-        AdminView view = new AdminView();
-        String ask = "1. Show me the table \n 2. show me customers \n 3. refill the stock \n 4. add new product \n 5. show me orders \n 6.Quit";
-        int answer = view.getIntAnswer(ask);
-        return answer;
-    }
-
 }

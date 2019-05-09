@@ -45,48 +45,69 @@ public class Controller{
 
     }
 
+
+
+
+
+
+
+
     private void handleAdmin() throws SQLException{
-        int answer = admin.askAdminForActivity();
-        if(answer == 1){
-            List<Product> products = admin.getAllProducts();
-            adminView.printAllProducts(products);
-        }else if (answer == 2){
-            List<User> users = admin.getAllCustomers();
-            adminView.printAllCustomers(users);
-        }else if (answer == 3){
-            List<Product> products = admin.getAllProducts();
-            int productID = adminView.getIntAnswer("Enter product ID: ");
-            int quantiti = adminView.getIntAnswer("Enter new stock size: ");
-            if (productID -1 != products.size()){
-                admin.refillTheStock(products.get(productID-1), quantiti);
-            }else {
-                System.out.println("no such item in the stock");
+        AdminView adminView = new AdminView();
+        Boolean adminControllerRunning = true;
+        adminView.clearScreen();
+        while (adminControllerRunning){
+            adminView.printAdminMenu();
+            int answer = adminView.getIntegerInput();
+            switch (answer) {
+                case 1:
+                    admin.printAllProducts();
+                    break;
+                case 2:
+                    admin.addNewCategory();
+                    break;
+                case 3:
+                    admin.updateCategoryName();
+                    break;
+                case 4:
+                    admin.deactivateProduct();
+                    break;
+                case 5:
+                    admin.activateProduct();
+                    break;
+                case 6:
+                    admin.addNewProduct();
+                    break;
+                case 7:
+                    admin.deleteProduct();
+                    break;
+                case 8:
+                    admin.editProduct();
+                    break;
+                case 9:
+                    admin.makeDiscount();
+                    break;
+                case 10:
+                    admin.printAllOrders();
+                    break;
+                case 11:
+                    adminView.clearScreen();
+                    adminControllerRunning = false;
+                    break;
+                default:
+                    adminView.clearScreen();
+                    System.out.println("Enter valid number.");
             }
-        }else if(answer == 4){
-            System.out.println("developer was lazy, no adding product for now");
-
-            String name = adminView.getStringAnswer("Enter name of product");
-            int typeId = adminView.getIntAnswer("Enter type id (number between 1 and 6): ");
-            float price = adminView.getFloatAnswer("Enter price separated by dot: ");
-            float alcoholContent = adminView.getFloatAnswer("Enter vol% of product: ");
-            float volume = adminView.getFloatAnswer("Enter quantity pf the product(for example 0.5 L): ");
-            int amount = adminView.getIntAnswer("Enter amount of the product in stock");
-            int year = adminView.getIntAnswer("Enter year (exp date yyyy): ");
-            int month = adminView.getIntAnswer("Enter month (exp date mm): ");;
-            int day = adminView.getIntAnswer("Enter day (exp date dd): ");;
-            Date expirationDate = new Date(year, month, day);
-            Product product = new Product(0, name, typeId, price, alcoholContent, volume, amount, expirationDate);
-            admin.CreateProduct(product);
-
-        }else if(answer == 5){
-            List<Order> orders = admin.getAllOrders();
-            adminView.printAllOrders(orders);
-        }else if(answer == 6){
-            adminConsoleHandler = false;
-        } else {
-            System.out.println("Enter valid number!");
         }
     }
+
+
+
+
+
+
+
+
 
     private void handleCustomer() throws SQLException{
         Customer currentCustomer = new Customer(2, 2, login, password);
