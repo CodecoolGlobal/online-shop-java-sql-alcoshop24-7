@@ -1,6 +1,7 @@
 package Controller;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -182,6 +183,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(exception);
         }
     }
+
 //    TODO
     @Override
     public void addNewOrder(Order order) {
@@ -195,10 +197,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         for (Map.Entry<Integer, Integer> entry : productIDAmount.entrySet()) {
             Product product = getProductById(entry.getKey());
             products.put(product, entry.getValue());
-
-
         }
-
         return products;
     }
 
@@ -230,6 +229,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         return products;
 
     }
+
     private Connection setConnection() {
         Connection connection = null;
         try {
@@ -247,25 +247,22 @@ public class CustomerDAOImpl implements CustomerDAO {
             Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
             PreparedStatement stmt;
             connection.setAutoCommit(false);
-            String sqlStatments = "insert into Products"
+            String sqlStatments = "insert into Orders"
                     + "(ID, CustomerID, BasketID, Status, CreationDate)"
                     + " values (?, ? ,? ,? ,? )";
 
             stmt = connection.prepareStatement(sqlStatments);
 
-
+            LocalDate date = order.getCreationDate().toLocalDate();
+            java.sql.Date sqlDate = java.sql.Date.valueOf(date);
 
             stmt.setInt(1, getOrderSize());
             stmt.setInt(2, order.getCustomerID());
             stmt.setInt(3, order.getBasketID());
             stmt.setString(4, order.getStatus());
-            stmt.setDate(5, null);
-
+            stmt.setDate(5, sqlDate);
 
             stmt.executeUpdate();
-
-
-
 
             stmt.close();
             connection.commit();
@@ -276,11 +273,34 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(ex.getMessage());
         }
     }
-    private void updateBasketTable(Basket basket){}
+
+    private void updateBasketTable(Basket basket){
+        try {Class.forName("org.sqlite.JDBC");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
+            PreparedStatement stmt;
+            connection.setAutoCommit(false);
+            String sqlStatments = "insert into Baskets"
+                    + "(BasketID, OrderID)"
+                    + " values (?, ?)";
+
+            stmt = connection.prepareStatement(sqlStatments);
+
+            stmt.setInt(1, basket.getID());
+            stmt.setInt(2, basket.getID());
+
+
+            stmt.executeUpdate();
+
+            stmt.close();
+            connection.commit();
+            connection.close();
+
+
+        }catch (ClassNotFoundException | SQLException ex){
+            System.err.println(ex.getMessage());
+        }
+    }
     private void updateBasketProductTable(Basket basket){}
-
-
-
 
     private int getOrderSize(){
         int orderSize = 0;
