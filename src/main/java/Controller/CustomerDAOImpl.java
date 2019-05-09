@@ -25,6 +25,30 @@ public class CustomerDAOImpl implements CustomerDAO {
     private List<Product> allProducts;
     private List<Order> myOrders;
 
+    //michals method
+//    public void deactivateProduct(){
+//        int ID = 1;
+//        try {
+//            //dbconnection = new DatabaseConnection();
+//            Connection connection = setConnection();
+//            connection.setAutoCommit(false);
+//
+//            //Statement stmt = connection.createStatement();
+//            //String sqlQuery ="UPDATE Products SET Available="+"false"+" WHERE ID="+ID+";";
+//
+//            String sqlQuery ="UPDATE Products SET Available = ? WHERE ID = ?";
+//            PreparedStatement stmt = connection.prepareStatement(sqlQuery);
+//            stmt.setString(1, "false");
+//            stmt.setInt(2, ID);
+//            stmt.executeUpdate();
+//            stmt.close();
+//            connection.commit();
+//            //connection.close();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @Override
     public List<Product> getAllProducts() throws SQLException {
         allProducts = new ArrayList<>();
@@ -245,4 +269,31 @@ public class CustomerDAOImpl implements CustomerDAO {
     private void updateOrderTable(Order order){}
     private void updateBasketTable(Basket basket){}
     private void updateBasketProductTable(Basket basket){}
+
+    private boolean checkIsEnoughProductInStock(int productId, int requiredAmmount){
+        Connection connection = setConnection();
+        ResultSet checkingResult = null;
+        int ammountOfProduct =0;
+        try{
+            connection.setAutoCommit(false);
+            PreparedStatement checkingStatement = connection.prepareStatement(
+              "SELECT Amount FROM Products WHERE ID =?"
+            );
+            checkingStatement.setInt(1, productId);
+            checkingResult = checkingStatement.executeQuery();
+            ammountOfProduct = checkingResult.getInt("Amount");
+
+            checkingStatement.close();
+            connection.commit();
+            connection.close();
+
+
+        }catch (SQLException exc){
+            exc.printStackTrace();
+        }
+        if (ammountOfProduct >= requiredAmmount){
+            return true;
+        }
+        return false;
+    }
 }
