@@ -25,7 +25,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     private List<Product> allProducts;
     private List<Order> myOrders;
 
-
+    @Override
     public List<Product> getAllProducts() throws SQLException {
         allProducts = new ArrayList<>();
         try {
@@ -62,18 +62,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 
 
 
-    private Connection setConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
-        } catch (ClassNotFoundException | SQLException ex) {
-            System.err.println(ex.getMessage());
-        }
-        return connection;
-    }
 
 
+    @Override
     public List<Order> getOrders(int customerId) throws SQLException {
         myOrders = new ArrayList<>();
         Connection con = setConnection();
@@ -110,6 +101,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         return myOrders;
     }
 
+    @Override
     public Order getOrder(int orderId) throws SQLException {
         Connection conn = setConnection();
         PreparedStatement statm = null;
@@ -142,6 +134,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         return order;
     }
 
+    @Override
     public Product getProductById(int productID) {
         Product product = null;
         Connection connection = setConnection();
@@ -200,7 +193,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         for (Map.Entry<Integer, Integer> entry : productIDAmount.entrySet()) {
             Product product = getProductById(entry.getKey());
             products.put(product, entry.getValue());
-            System.out.println("amount: " + entry.getValue());
+
 
         }
 
@@ -219,11 +212,12 @@ public class CustomerDAOImpl implements CustomerDAO {
             statement.setInt(1, basketID);
 
             resultSet2 = statement.executeQuery();
+            while(resultSet2.next()) {
+                int productsID = resultSet2.getInt("ProductID");
+                int amount = resultSet2.getInt("Ammount");
+                products.put(productsID, amount);
 
-            int productsID = resultSet2.getInt("ProductID");
-            int amount = resultSet2.getInt("Ammount");
-            products.put(productsID, amount);
-
+            }
             statement.close();
             connection.close();
 
@@ -233,5 +227,15 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return products;
 
+    }
+    private Connection setConnection() {
+        Connection connection = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:alcoshop2.db");
+        } catch (ClassNotFoundException | SQLException ex) {
+            System.err.println(ex.getMessage());
+        }
+        return connection;
     }
 }
