@@ -14,7 +14,9 @@ public interface CustomerDAO{
     List<Order> getOrders(int customerId) throws SQLException;
     Order getOrder(int orderId) throws SQLException;
 
-    void createNewOrder(int customerID, Basket basket);
+
+
+    void addNewOrder(Order order);
 
 
 }

@@ -182,10 +182,12 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(exception);
         }
     }
-
+//    TODO
     @Override
-    public void createNewOrder(int customerID, Basket basket) {
-
+    public void addNewOrder(Order order) {
+        updateOrderTable(null);
+        updateBasketProductTable(null);
+        updateBasketTable(null);
     }
 
     private Map<Product, Integer> getBasket(Map<Integer, Integer> productIDAmount){
@@ -238,4 +240,9 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return connection;
     }
+
+//    TODO
+    private void updateOrderTable(Order order){}
+    private void updateBasketTable(Basket basket){}
+    private void updateBasketProductTable(Basket basket){}
 }
