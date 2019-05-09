@@ -116,8 +116,8 @@ public class Controller{
             customerConsoleHandler = false;
         }
         else if (answer == 5){
-            int chosenProductID = customerView.getIntAnswer("Which product you want to rate? Chhose ID");
-            int customersRate = customerView.getIntAnswer("Your rate is: (form 1 to 5");
+            int chosenProductID = customerView.getIntAnswer("Which product you want to rate? Choose ID");
+            int customersRate = customerView.getIntAnswer("Your rate is: (form 1 to 5)");
             customerController.rateProduct(chosenProductID, customersRate);
         }
 

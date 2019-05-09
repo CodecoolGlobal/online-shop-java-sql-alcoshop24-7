@@ -1,6 +1,6 @@
 package Controller;
 
-import java.text.ParseException;
+import java.text.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +12,6 @@ import sun.misc.Resource;
 
 import java.sql.*;
 import java.text.ParseException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -159,8 +157,6 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            //System.err.println(exception);
-
         }
         return product;
 
@@ -187,8 +183,6 @@ public class CustomerDAOImpl implements CustomerDAO {
         float currentRate = getCurrentRate(id);
         int numOfOpinions = getNumOfOp(id);
         float newRate = calculateNewRate(currentRate, numOfOpinions, customerRate);
-        System.out.println("product id" + id);
-        System.out.println(("NewRate" + newRate));
         int newNumOfOp = numOfOpinions+1;
         updateRate(id, newRate, newNumOfOp);
     }
@@ -211,9 +205,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         } catch (SQLException exception) {
             exception.printStackTrace();
-            //System.err.println(exception);
         }
-        System.out.println(currentRate);
         return currentRate;
     }
 
@@ -235,10 +227,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
         } catch (SQLException exception) {
             exception.printStackTrace();
-            //System.err.println(exception);
         }
-        System.out.println("num of opinion");
-        System.out.println(numOfOpp);
         return numOfOpp;
     }
 
@@ -247,7 +236,6 @@ public class CustomerDAOImpl implements CustomerDAO {
         try {
             updateCon.setAutoCommit(true);
 
-            //String updateQuery = "UPDATE Products SET Rate = ?, NumOfOp = ? WHERE ID = ?";
             PreparedStatement updateStatement = updateCon.prepareStatement
                     ("UPDATE Products SET Rate = ?, NumOfOp = ? WHERE ID = ?");
             updateStatement.setFloat(1, newRate);
@@ -259,20 +247,16 @@ public class CustomerDAOImpl implements CustomerDAO {
             updateStatement.close();
             updateCon.close();
 
-
         } catch (SQLException exception) {
             exception.printStackTrace();
-            //System.err.println(exception);
         }
     }
-
 
 
     private float calculateNewRate(float oldRate, int numOfOpinions, int customerRate){
         float firstStep = oldRate * numOfOpinions;
         float secondStep = firstStep + customerRate;
         float result = secondStep / (numOfOpinions +1);
-        System.out.println(result);
         return result;
     }
 }
