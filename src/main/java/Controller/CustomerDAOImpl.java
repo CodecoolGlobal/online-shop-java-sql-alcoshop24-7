@@ -257,9 +257,9 @@ public class CustomerDAOImpl implements CustomerDAO {
             LocalDate date = order.getCreationDate().toLocalDate();
             java.sql.Date sqlDate = java.sql.Date.valueOf(date);
 
-            stmt.setInt(1, getOrderSize());
+            stmt.setInt(1, getOrderSize()+1);
             stmt.setInt(2, order.getCustomerID());
-            stmt.setInt(3, order.getBasketID());
+            stmt.setInt(3, getOrderSize()+1);
             stmt.setString(4, order.getStatus());
             stmt.setDate(5, sqlDate);
 

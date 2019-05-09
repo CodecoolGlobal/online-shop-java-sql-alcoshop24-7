@@ -25,7 +25,7 @@ public class Basket{
     }
 
     public void addProduct(Product product, int ammount){
-
+        products.put(product, ammount);
     }
 
 

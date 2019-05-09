@@ -20,6 +20,8 @@ public class CustomerController{
         return dao.getAllProducts();
     }
 
+
+
     public List<Order> getOrders(int customerID)throws SQLException{
         return dao.getOrders(customerID);
     }
