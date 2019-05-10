@@ -20,7 +20,9 @@ public class CustomerController{
         return dao.getAllProducts();
     }
 
-
+    public int getOrderSize(){
+        return dao.getOrderSize();
+    }
 
     public List<Order> getOrders(int customerID)throws SQLException{
         return dao.getOrders(customerID);
@@ -36,6 +38,10 @@ public class CustomerController{
 
     public void addOrder(Order order){
         dao.addNewOrder(order);
+    }
+
+    public void rateProduct(int ID, int customerRate){
+        dao.rateProduct(ID, customerRate);
     }
 
 

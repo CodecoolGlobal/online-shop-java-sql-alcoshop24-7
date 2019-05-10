@@ -10,11 +10,11 @@ public class Product {
     private float price;
     private int amount;
     private boolean isAvailable;
-    int rate;
+    float rate;
 
     
     public Product(int id, String name, int typeId, float price,
-        int amount, String available, int rate){
+        int amount, String available, float rate){
         
         this.id = id;
         this.name = name;
@@ -63,12 +63,18 @@ public class Product {
         this.amount = amount;
     }
 
+    public float getRate(){
+        return rate;
+    }
+
 
 
     public String toString(){
 
-        String result = String.format("Product ID: %d, name: %s, price: %.2f zł",
-                getId(), getName(), getPrice());
+        String result = String.format("Product ID: %d, name: %s, price: %.2f zł, rate: %f",
+                getId(), getName(), getPrice(), getRate());
         return result;
     }
+
+
 }

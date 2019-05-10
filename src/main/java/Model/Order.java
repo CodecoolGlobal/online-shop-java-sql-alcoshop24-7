@@ -54,9 +54,7 @@ public class Order{
     }
 
     public String toString(){
-        String string = new String("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data: " + getCreationDate()  );
-
-
+        String string = ("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data: " + getCreationDate()  );
         return string;
     }
 

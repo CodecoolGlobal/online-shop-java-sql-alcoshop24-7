@@ -1,10 +1,16 @@
 package Controller;
 
+
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import java.text.*;
+import java.util.ArrayList;
+import java.util.List;
+
 
 import Controller.CustomerDAO;
 import Model.Product;
@@ -14,9 +20,11 @@ import sun.misc.Resource;
 
 import java.sql.*;
 import java.text.ParseException;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import java.util.List;
 import java.lang.Integer;
 
@@ -44,7 +52,13 @@ public class CustomerDAOImpl implements CustomerDAO {
                 int typeID = resultSet.getInt("TypeID");
                 float price = resultSet.getFloat("Price");
                 int amount = resultSet.getInt("Amount");
-                int rate = resultSet.getInt("Rate");
+
+
+
+                //java.util.Date expDate = FORMAT.parse(resultSet.getString("ExpDate"));
+               // java.sql.Date sqlExpDate = new java.sql.Date(expDate.getTime());
+                float rate = resultSet.getFloat("Rate");
+
                 String available = resultSet.getString("Available");
                 Product product = new Product(id, name, typeID, price, amount, available, rate);
 
@@ -87,9 +101,9 @@ public class CustomerDAOImpl implements CustomerDAO {
                 String status = resultSet.getString("Status");
 //                LocalDateTime creationDate = LocalDateTime.parse(resultSet.getString("CreationDate"), formatter);
 //                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(creationDate);
-                Map idSet = getProductsIDByBasketID(basketID);
+                Map <Integer, Integer>idSet = getProductsIDByBasketID(basketID);
 
-                Map products = getBasket(idSet);
+                Map<Product, Integer> products = getBasket(idSet);
                 Basket basket = new Basket(basketID, products);
                 myOrders.add(new Order(orderID, userID, basketID, status ,null, basket));}
 
@@ -163,8 +177,7 @@ public class CustomerDAOImpl implements CustomerDAO {
             connection.close();
 
         } catch (Exception exception) {
-            System.err.println(exception);
-
+            exception.printStackTrace();
         }
         return product;
 
@@ -303,7 +316,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
 
-    private int getOrderSize(){
+    public int getOrderSize(){
         int orderSize = 0;
         Connection con = setConnection();
         PreparedStatement stmt = null;
@@ -345,8 +358,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
                 stmt = connection.prepareStatement(sqlStatments);
 
-                stmt.setInt(1, getBasketProductrSize()+1);//this should be order Id but it's same as basketId
-                stmt.setInt(2, basket.getID());
+                stmt.setInt(1, getOrderSize()+1);//this should be order Id but it's same as basketId
+                stmt.setInt(2, getOrderSize()+1);
                 stmt.setInt(3, entry.getKey().getId());
                 stmt.setInt(4, entry.getValue());
 
@@ -416,6 +429,90 @@ public class CustomerDAOImpl implements CustomerDAO {
             System.err.println(ex.getMessage());
         }
         return orderSize;
+    }
+
+
+
+    public void rateProduct(int id, int customerRate){
+
+        float currentRate = getCurrentRate(id);
+        int numOfOpinions = getNumOfOp(id);
+        float newRate = calculateNewRate(currentRate, numOfOpinions, customerRate);
+        int newNumOfOp = numOfOpinions+1;
+        updateRate(id, newRate, newNumOfOp);
+    }
+
+    private float getCurrentRate(int id) {
+        Connection rateCon = setConnection();
+        ResultSet rateResult = null;
+        float currentRate = 0;
+        try {
+            rateCon.setAutoCommit(false);
+            PreparedStatement idStat = rateCon.prepareStatement("SELECT Rate FROM Products WHERE id=?");
+            idStat.setInt(1, id);
+            rateResult = idStat.executeQuery();
+
+            currentRate = rateResult.getFloat("Rate");
+
+            rateResult.close();
+            idStat.close();
+            rateCon.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return currentRate;
+    }
+
+    private int getNumOfOp(int id){
+        Connection rateCon = setConnection();
+        ResultSet rateResult = null;
+        int numOfOpp = 0;
+        try {
+            rateCon.setAutoCommit(false);
+            PreparedStatement idStat = rateCon.prepareStatement("SELECT NumOfOp FROM Products WHERE id=?");
+            idStat.setInt(1, id);
+            rateResult = idStat.executeQuery();
+
+            numOfOpp = rateResult.getInt("NumOfOp");
+
+            rateResult.close();
+            idStat.close();
+            rateCon.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return numOfOpp;
+    }
+
+    private void updateRate(int idproduct, float newRate, int newNumOfOp) {
+        Connection updateCon = setConnection();
+        try {
+            updateCon.setAutoCommit(true);
+
+            PreparedStatement updateStatement = updateCon.prepareStatement
+                    ("UPDATE Products SET Rate = ?, NumOfOp = ? WHERE ID = ?");
+            updateStatement.setFloat(1, newRate);
+            updateStatement.setInt(2, newNumOfOp);
+            updateStatement.setInt(3, idproduct);
+
+            updateStatement.executeUpdate();
+
+            updateStatement.close();
+            updateCon.close();
+
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+
+    private float calculateNewRate(float oldRate, int numOfOpinions, int customerRate){
+        float firstStep = oldRate * numOfOpinions;
+        float secondStep = firstStep + customerRate;
+        float result = secondStep / (numOfOpinions +1);
+        return result;
     }
 
 }
