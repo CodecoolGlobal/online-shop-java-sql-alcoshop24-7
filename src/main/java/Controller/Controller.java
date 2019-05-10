@@ -98,7 +98,7 @@ public class Controller{
 
         if (answer == 1){
             customerView.printProducts(customerController.getAllProducts());
-            System.out.println(currentCustomer.getId());
+            //System.out.println(currentCustomer.getId());
         }
         else if(answer == 2){
             List<Order> ordersToPrint = customerController.getOrders(currentCustomer.getId());

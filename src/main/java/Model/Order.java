@@ -2,6 +2,8 @@ package Model;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 
@@ -55,7 +57,20 @@ public class Order{
 
     public String toString(){
         String string = ("ID: " + getID() + ", UserID: " + getCustomerID() + ", BasketID: " + getBasketID() + ", status: " + getStatus() + ", creation data: " + getCreationDate()  );
-        return string;
+        StringBuilder products = new StringBuilder();
+        //Basket basket = this.basket;
+        Map<Product, Integer> basketContent = this.basket.getProducts();
+
+        for (Map.Entry<Product, Integer> entry: basketContent.entrySet()) {
+            String ammount = entry.getValue().toString();
+            String productName = entry.getKey().getName();
+            products.append(" Product: ");
+            products.append(productName);
+            products.append(", ammount: ");
+            products.append(ammount + "\n");
+        }
+        String productsStr = products.toString();
+        return string + productsStr;
     }
 
 
